@@ -1,80 +1,99 @@
-<!DOCTYPE html>
-<html lang="it">
+@extends('layouts.app')
 
-<head>
-    <meta charset="UTF-8">
-    <title>Guestbook Laravel</title>
-</head>
+@section('title', 'Guestbook')
 
-<body>
-    <h1>Guestbook Laravel</h1>
+@section('content')
 
-    {{-- Messaggio di successo dopo il redirect --}}
-    @if (session('success'))
-    <p style="color: green;">
+<h1 class="mb-4">Guestbook</h1>
+
+{{-- Messaggio di successo --}}
+@if (session('success'))
+    <div class="alert alert-success">
         {{ session('success') }}
-    </p>
-    @endif
+    </div>
+@endif
 
-    {{-- Errori di validazione --}}
-    @if ($errors->any())
-    <div style="color: red;">
-        <ul>
+{{-- Errori di validazione (generali) --}}
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul class="mb-0">
             @foreach ($errors->all() as $error)
-            <li>{{ $error }}</li>
+                <li>{{ $error }}</li>
             @endforeach
         </ul>
     </div>
-    @endif
+@endif
 
-    {{-- FORM DI INSERIMENTO --}}
-    <form method="POST" action="{{ route('messages.store') }}">
-        @csrf {{-- token di sicurezza --}}
+{{-- FORM DI INSERIMENTO --}}
+<form method="POST" action="{{ route('messages.store') }}" class="mb-4">
+    @csrf
 
-        <div>
-            <label>
-                Nome:
-                <input type="text" name="author" value="{{ old('author') }}" required>
-            </label>
-        </div>
+    <div class="mb-3">
+        <label for="author" class="form-label">Nome</label>
+        <input
+            type="text"
+            id="author"
+            name="author"
+            class="form-control"
+            value="{{ old('author') }}"
+            required
+        >
+    </div>
 
-        <div>
-            <label>
-                Messaggio:
-                <textarea name="message" rows="4" required>{{ old('message') }}</textarea>
-            </label>
-        </div>
+    <div class="mb-3">
+        <label for="message" class="form-label">Messaggio</label>
+        <textarea
+            id="message"
+            name="message"
+            rows="4"
+            class="form-control"
+            required
+        >{{ old('message') }}</textarea>
+    </div>
 
-        <button type="submit">Invia</button>
-    </form>
+    <button class="btn btn-primary">Invia</button>
+</form>
 
-    <hr>
+<hr>
 
-    <h2>Messaggi:</h2>
+<h2>Messaggi</h2>
 
-    @if($messages->isEmpty())
-    <p>Nessun messaggio ancora. Scrivi tu il primo!</p>
-    @else
-    <ul>
+@if ($messages->isEmpty())
+    <p class="text-muted">Nessun messaggio ancora. Scrivi tu il primo!</p>
+@else
+    <ul class="list-group">
         @foreach ($messages as $msg)
-        <li style="margin-bottom: 10px;">
-            <strong>{{ $msg->author }}</strong><br>
-            {{ $msg->message }}<br>
-            <small>{{ $msg->created_at }}</small>
+            <li class="list-group-item">
+                <strong>{{ $msg->author }}</strong><br>
+                {{ $msg->message }}<br>
+                <small class="text-muted">
+                    {{ $msg->created_at->format('d/m/Y H:i') }}
+                </small>
 
+                <div class="mt-2">
+                    <a
+                        class="btn btn-sm btn-outline-primary"
+                        href="{{ route('messages.edit', $msg->id) }}"
+                    >
+                        Modifica
+                    </a>
 
-            <a href="{{ route('messages.edit', $msg->id) }}">Modifica</a>
-
-            {{-- pulsantre per la cnaellazione del messaggio --}}
-            <form method="POST" action="{{route('messages.destroy',$msg->id)}}" style="display:inline">
-                @csrf {{-- token di sicurezza --}}
-                @method('DELETE')
-                <button type="submit">Elimina</button>
-            </form>
-        </li>
+                    <form
+                        method="POST"
+                        action="{{ route('messages.destroy', $msg->id) }}"
+                        class="d-inline"
+                        onsubmit="return confirm('Eliminare questo messaggio?')"
+                    >
+                        @csrf
+                        @method('DELETE')
+                        <button class="btn btn-sm btn-outline-danger">
+                            Elimina
+                        </button>
+                    </form>
+                </div>
+            </li>
         @endforeach
     </ul>
-    @endif
-</body>
+@endif
 
-</html>
+@endsection

@@ -1,51 +1,59 @@
-<!DOCTYPE html>
-<html lang="it">
-<head>
-    <meta charset="UTF-8">
-    <title>Guestbook Laravel</title>
-</head>
-<body>
+@extends('layouts.app')
 
-    {{-- Messaggio di successo dopo il redirect --}}
-    @if (session('success'))
-        <p style="color: green;">
-            {{ session('success') }}
-        </p>
-    @endif
+@section('title', 'Guestbook')
 
-    {{-- Errori di validazione --}}
-    @if ($errors->any())
-        <div style="color: red;">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+@section('content')
 
-    {{-- FORM DI Modifica messaggio --}}
-    <form method="POST" action="{{ route('messages.update', $message->id) }}">
-        @csrf {{-- token di sicurezza --}}
-        @method('PUT');
-        <div>
-            <label>
-                Nome:
-                <input type="text" name="author" value="{{ old('author'), $message->author }}" required>
+<h1 class="mb-4">Guestbook</h1>
+
+{{-- Messaggio di successo dopo il redirect --}}
+@if (session('success'))
+<p style="color: green;">
+    {{ session('success') }}
+</p>
+@endif
+
+{{-- Errori di validazione --}}
+@if ($errors->any())
+<div style="color: red;">
+    <ul>
+        @foreach ($errors->all() as $error)
+        <li>{{ $error }}</li>
+        @endforeach
+    </ul>
+</div>
+@endif
+
+{{-- FORM DI Modifica messaggio --}}
+<form method="POST" action="{{ route('messages.update', $message->id) }}">
+    @csrf {{-- token di sicurezza --}}
+    @method('PUT');
+    <form>
+        <div class="mb-3">
+            <label for="author" class="form-label">Nome
+              
             </label>
-        </div>
+            <input type="author" class="form-control" id="author" aria-describedby="author">
 
-        <div>
-            <label>
-                Messaggio:
-                <textarea name="message" rows="4" required>{{ old('message'), $message->text }}</textarea>
+        </div>
+        <div class="mb-3">
+            <label for="message" class="form-label">message
+                
             </label>
+            <input type="text" class="form-control" id="message">
         </div>
-
-        <button type="submit">Modifica</button>
+        <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" id="exampleCheck1">
+            <label class="form-check-label" for="exampleCheck1">Check me out</label>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
     </form>
+</form>
 
-    <hr>
 
-</body>
-</html>
+
+
+
+
+<hr>
+@endsection('content')
