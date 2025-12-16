@@ -13,7 +13,7 @@ class GuestbookController extends Controller
     public function index()
     {
         // prendo i messaggi dal DB, dal più recente al più vecchio
-        $messages = Message::orderBy('created_at', 'desc')->get();
+        $messages = Message::orderBy('created_at', 'desc')->paginate(10);
 
         return view('index', [
             'messages' => $messages,

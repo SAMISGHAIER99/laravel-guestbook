@@ -8,20 +8,20 @@
 
 {{-- Messaggio di successo --}}
 @if (session('success'))
-    <div class="alert alert-success">
-        {{ session('success') }}
-    </div>
+<div class="alert alert-success">
+    {{ session('success') }}
+</div>
 @endif
 
 {{-- Errori di validazione (generali) --}}
 @if ($errors->any())
-    <div class="alert alert-danger">
-        <ul class="mb-0">
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
+<div class="alert alert-danger">
+    <ul class="mb-0">
+        @foreach ($errors->all() as $error)
+        <li>{{ $error }}</li>
+        @endforeach
+    </ul>
+</div>
 @endif
 
 {{-- FORM DI INSERIMENTO --}}
@@ -36,8 +36,7 @@
             name="author"
             class="form-control"
             value="{{ old('author') }}"
-            required
-        >
+            required>
     </div>
 
     <div class="mb-3">
@@ -47,8 +46,7 @@
             name="message"
             rows="4"
             class="form-control"
-            required
-        >{{ old('message') }}</textarea>
+            required>{{ old('message') }}</textarea>
     </div>
 
     <button class="btn btn-primary">Invia</button>
@@ -59,41 +57,45 @@
 <h2>Messaggi</h2>
 
 @if ($messages->isEmpty())
-    <p class="text-muted">Nessun messaggio ancora. Scrivi tu il primo!</p>
+<p class="text-muted">Nessun messaggio ancora. Scrivi tu il primo!</p>
 @else
-    <ul class="list-group">
-        @foreach ($messages as $msg)
-            <li class="list-group-item">
-                <strong>{{ $msg->author }}</strong><br>
-                {{ $msg->message }}<br>
-                <small class="text-muted">
-                    {{ $msg->created_at->format('d/m/Y H:i') }}
-                </small>
+<ul class="list-group">
+    @foreach ($messages as $msg)
+    <li class="list-group-item">
+        <strong>{{ $msg->author }}</strong><br>
+        {{ $msg->message }}<br>
+        <small class="text-muted">
+            {{ $msg->created_at->format('d/m/Y H:i') }}
+        </small>
 
-                <div class="mt-2">
-                    <a
-                        class="btn btn-sm btn-outline-primary"
-                        href="{{ route('messages.edit', $msg->id) }}"
-                    >
-                        Modifica
-                    </a>
+        <div class="mt-2">
+            <a
+                class="btn btn-sm btn-outline-primary"
+                href="{{ route('messages.edit', $msg->id) }}">
+                Modifica
+            </a>
 
-                    <form
-                        method="POST"
-                        action="{{ route('messages.destroy', $msg->id) }}"
-                        class="d-inline"
-                        onsubmit="return confirm('Eliminare questo messaggio?')"
-                    >
-                        @csrf
-                        @method('DELETE')
-                        <button class="btn btn-sm btn-outline-danger">
-                            Elimina
-                        </button>
-                    </form>
-                </div>
-            </li>
-        @endforeach
-    </ul>
+            <form
+                method="POST"
+                action="{{ route('messages.destroy', $msg->id) }}"
+                class="d-inline"
+                onsubmit="return confirm('Eliminare questo messaggio?')">
+                @csrf
+                @method('DELETE')
+                <button class="btn btn-sm btn-outline-danger">
+                    Elimina
+                </button>
+            </form>
+        </div>
+    </li>
+    @endforeach
+</ul>
+
+<div class="mt-3">
+    {{ $messages->links() }}
+</div>
+
+
 @endif
 
 @endsection
