@@ -55,13 +55,13 @@ class GuestbookController extends Controller
 
         $message->update($validated);
         // 3) redirect alla pagina principale
-        return redirect('/')->with('success', 'Messaggio Modificato con successo!');
+        return redirect('/guestbook')->with('success', 'Messaggio Modificato con successo!');
     }
 
     //destroy 
     public function destroy(Message $message)
     {
         $message->delete();
-        return redirect('/')->with('success', 'Messaggio cancellato con successo!');
+        return redirect('/guestbook')->with('success', 'Messaggio cancellato con successo!');
     }
 }
